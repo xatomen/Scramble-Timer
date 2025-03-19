@@ -1,0 +1,3 @@
+# Ignore database configuration
+db_data/
+.env

@@ -1,0 +1,20 @@
+# Docker compose
+version: '3.7'
+
+services:
+
+  # Frontend service
+
+  # Backend service
+
+  # Database service
+  db:
+    image: mysql:5.7
+    container_name: db
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
