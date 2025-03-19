@@ -86,5 +86,17 @@ def get_db():
     finally:
         db.close()
 
-
+# Definimos un endpoint POST en la ruta "/solve/"
+@app.post("/solve/")
+def create_solve(solve: SolveCreate, db: Session = Depends(get_db)):
+    # Convertimos el objeto SolveCreate en un diccionario y lo desempaquetamos para crear una instancia de Solve
+    db_solve = Solve(**solve.dict())
+    # Añadimos la nueva instancia de Solve a la sesión de la base de datos
+    db.add(db_solve)
+    # Confirmamos la transacción para guardar los cambios en la base de datos
+    db.commit()
+    # Refrescamos la instancia de Solve para obtener los datos actualizados desde la base de datos
+    db.refresh(db_solve)
+    # Devolvemos la instancia de Solve creada
+    return db_solve
 
