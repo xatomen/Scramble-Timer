@@ -6,6 +6,19 @@ services:
   # Frontend service
 
   # Backend service
+  backend:
+    image: backend_image
+    build:
+      context: ./app-back/
+      dockerfile: Dockerfile
+    container_name: backend
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    volumes:
+      - ./app-back:/app-back
 
   # Database service
   db:
