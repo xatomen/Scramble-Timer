@@ -1,0 +1,4 @@
+# Ignore database configuration
+db_data/
+.env
+scramble-timer-db.sql
