@@ -399,3 +399,15 @@ def get_sessions(user_id: int, db: Session = Depends(get_db)):
     db_sessions = db.query(Session).filter(Session.fk_user == user_id).all()
     # Devolvemos la lista de instancias de Session
     return db_sessions
+
+# Definimos un endpoint DELETE en la ruta "/session/{id}"
+@app.delete("/session/{id}")
+def delete_session(id: int, db: Session = Depends(get_db)):
+    # Obtenemos la instancia de Session con el id proporcionado
+    db_session = db.query(Session).filter(Session.id_session == id).first()
+    # Eliminamos la instancia de Session de la sesión de la base de datos
+    db.delete(db_session)
+    # Confirmamos la transacción para guardar los cambios en la base de datos
+    db.commit()
+    # Devolvemos la instancia de Session eliminada
+    return db_session
