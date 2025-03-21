@@ -256,3 +256,15 @@ def put_cube_type(id: int, cube_type: CubeType, db: Session = Depends(get_db)):
     db.refresh(db_cube_type)
     # Devolvemos la instancia de CubeType actualizada
     return db_cube_type
+
+# Definimos un endpoint POST en la ruta "/solve_type/"
+@app.post("/solve_type/")
+def post_solve_type(solve_type: SolveType, db: Session = Depends(get_db)):
+    # Añadimos la nueva instancia de SolveType a la sesión de la base de datos
+    db.add(solve_type)
+    # Confirmamos la transacción para guardar los cambios en la base de datos
+    db.commit()
+    # Refrescamos la instancia de SolveType para obtener los datos actualizados desde la base de datos
+    db.refresh(solve_type)
+    # Devolvemos la instancia de SolveType creada
+    return solve_type
