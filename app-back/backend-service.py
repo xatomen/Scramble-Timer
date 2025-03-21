@@ -214,3 +214,11 @@ def post_cube_type(cube_type: CubeType, db: Session = Depends(get_db)):
     db.refresh(cube_type)
     # Devolvemos la instancia de CubeType creada
     return cube_type
+
+# Definimos un endpoint GET en la ruta "/cube_type/{id}"
+@app.get("/cube_type/{id}")
+def get_cube_type(id: int, db: Session = Depends(get_db)):
+    # Obtenemos la instancia de CubeType con el id proporcionado
+    db_cube_type = db.query(CubeType).filter(CubeType.id_cube_type == id).first()
+    # Devolvemos la instancia de CubeType
+    return db_cube_type
