@@ -230,3 +230,15 @@ def get_cube_types(db: Session = Depends(get_db)):
     db_cube_types = db.query(CubeType).all()
     # Devolvemos la lista de instancias de CubeType
     return db_cube_types
+
+# Definimos un endpoint DELETE en la ruta "/cube_type/{id}"
+@app.delete("/cube_type/{id}")
+def delete_cube_type(id: int, db: Session = Depends(get_db)):
+    # Obtenemos la instancia de CubeType con el id proporcionado
+    db_cube_type = db.query(CubeType).filter(CubeType.id_cube_type == id).first()
+    # Eliminamos la instancia de CubeType de la sesión de la base de datos
+    db.delete(db_cube_type)
+    # Confirmamos la transacción para guardar los cambios en la base de datos
+    db.commit()
+    # Devolvemos la instancia de CubeType eliminada
+    return db_cube_type
