@@ -145,3 +145,15 @@ def put_solve(id: int, solve: SolveCreate, db: Session = Depends(get_db)):
     db.refresh(db_solve)
     # Devolvemos la instancia de Solve actualizada
     return
+
+# Definimos un endpoint POST en la ruta "/cube/"
+@app.post("/cube/")
+def post_cube(cube: Cube, db: Session = Depends(get_db)):
+    # Añadimos la nueva instancia de Cube a la sesión de la base de datos
+    db.add(cube)
+    # Confirmamos la transacción para guardar los cambios en la base de datos
+    db.commit()
+    # Refrescamos la instancia de Cube para obtener los datos actualizados desde la base de datos
+    db.refresh(cube)
+    # Devolvemos la instancia de Cube creada
+    return cube
