@@ -202,3 +202,15 @@ def put_cube(id: int, cube: Cube, db: Session = Depends(get_db)):
     db.refresh(db_cube)
     # Devolvemos la instancia de Cube actualizada
     return db_cube
+
+# Definimos un endpoint POST en la ruta "/cube_type/"
+@app.post("/cube_type/")
+def post_cube_type(cube_type: CubeType, db: Session = Depends(get_db)):
+    # Añadimos la nueva instancia de CubeType a la sesión de la base de datos
+    db.add(cube_type)
+    # Confirmamos la transacción para guardar los cambios en la base de datos
+    db.commit()
+    # Refrescamos la instancia de CubeType para obtener los datos actualizados desde la base de datos
+    db.refresh(cube_type)
+    # Devolvemos la instancia de CubeType creada
+    return cube_type
