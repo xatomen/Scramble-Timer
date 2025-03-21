@@ -268,3 +268,11 @@ def post_solve_type(solve_type: SolveType, db: Session = Depends(get_db)):
     db.refresh(solve_type)
     # Devolvemos la instancia de SolveType creada
     return solve_type
+
+# Definimos un endpoint GET en la ruta "/solve_type/{id}"
+@app.get("/solve_type/{id}")
+def get_solve_type(id: int, db: Session = Depends(get_db)):
+    # Obtenemos la instancia de SolveType con el id proporcionado
+    db_solve_type = db.query(SolveType).filter(SolveType.id_solve_type == id).first()
+    # Devolvemos la instancia de SolveType
+    return db_solve_type
