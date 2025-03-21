@@ -343,3 +343,15 @@ def get_users(db: Session = Depends(get_db)):
     db_users = db.query(User).all()
     # Devolvemos la lista de instancias de User
     return db_users
+
+# Definimos un endpoint DELETE en la ruta "/user/{id}"
+@app.delete("/user/{id}")
+def delete_user(id: int, db: Session = Depends(get_db)):
+    # Obtenemos la instancia de User con el id proporcionado
+    db_user = db.query(User).filter(User.id_user == id).first()
+    # Eliminamos la instancia de User de la sesión de la base de datos
+    db.delete(db_user)
+    # Confirmamos la transacción para guardar los cambios en la base de datos
+    db.commit()
+    # Devolvemos la instancia de User eliminada
+    return db_user
