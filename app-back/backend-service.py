@@ -157,3 +157,11 @@ def post_cube(cube: Cube, db: Session = Depends(get_db)):
     db.refresh(cube)
     # Devolvemos la instancia de Cube creada
     return cube
+
+# Definimos un endpoint GET en la ruta "/cube/{id}"
+@app.get("/cube/{id}")
+def get_cube(id: int, db: Session = Depends(get_db)):
+    # Obtenemos la instancia de Cube con el id proporcionado
+    db_cube = db.query(Cube).filter(Cube.id_cube == id).first()
+    # Devolvemos la instancia de Cube
+    return db_cube
