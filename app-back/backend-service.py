@@ -107,3 +107,11 @@ def get_solve(id: int, db: Session = Depends(get_db)):
     db_solve = db.query(Solve).filter(Solve.id_solve == id).first()
     # Devolvemos la instancia de Solve
     return db_solve
+
+# Definimos un endpoint GET en la ruta "/solve/"
+@app.get("/solve/")
+def get_solves(db: Session = Depends(get_db)):
+    # Obtenemos todas las instancias de Solve
+    db_solves = db.query(Solve).all()
+    # Devolvemos la lista de instancias de Solve
+    return db_solves
