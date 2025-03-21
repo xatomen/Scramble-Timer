@@ -461,3 +461,11 @@ def post_session_solve(id: int, solve: SolveCreate, db: Session = Depends(get_db
     db.refresh(db_solve)
     # Devolvemos la instancia de Solve creada
     return db_solve
+
+# Definimos un endpoint GET en la ruta "/session/{id}/solve/"
+@app.get("/session/{id}/solve/")
+def get_session_solves(id: int, db: Session = Depends(get_db)):
+    # Obtenemos todas las instancias de Solve de la sesión correspondiente
+    db_solves = db.query(Solve).filter(Solve.fk_session == id).all()
+    # Devolvemos la lista de instancias de Solve
+    return db_solves
