@@ -327,3 +327,11 @@ def post_user(user: User, db: Session = Depends(get_db)):
     db.refresh(user)
     # Devolvemos la instancia de User creada
     return user
+
+# Definimos un endpoint GET en la ruta "/user/{id}"
+@app.get("/user/{id}")
+def get_user(id: int, db: Session = Depends(get_db)):
+    # Obtenemos la instancia de User con el id proporcionado
+    db_user = db.query(User).filter(User.id_user == id).first()
+    # Devolvemos la instancia de User
+    return db_user
