@@ -296,3 +296,17 @@ def delete_solve_type(id: int, db: Session = Depends(get_db)):
     db.commit()
     # Devolvemos la instancia de SolveType eliminada
     return db_solve_type
+
+# Definimos un endpoint PUT en la ruta "/solve_type/{id}"
+@app.put("/solve_type/{id}")
+def put_solve_type(id: int, solve_type: SolveType, db: Session = Depends(get_db)):
+    # Obtenemos la instancia de SolveType con el id proporcionado
+    db_solve_type = db.query(SolveType).filter(SolveType.id_solve_type == id).first()
+    # Actualizamos los campos de la instancia de SolveType con los valores proporcionados
+    db_solve_type.solve_type = solve_type.solve_type
+    # Confirmamos la transacción para guardar los cambios en la base de datos
+    db.commit()
+    # Refrescamos la instancia de SolveType para obtener los datos actualizados desde la base de datos
+    db.refresh(db_solve_type)
+    # Devolvemos la instancia de SolveType actualizada
+    return db_solve_type
