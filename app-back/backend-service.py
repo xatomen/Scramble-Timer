@@ -242,3 +242,17 @@ def delete_cube_type(id: int, db: Session = Depends(get_db)):
     db.commit()
     # Devolvemos la instancia de CubeType eliminada
     return db_cube_type
+
+# Definimos un endpoint PUT en la ruta "/cube_type/{id}"
+@app.put("/cube_type/{id}")
+def put_cube_type(id: int, cube_type: CubeType, db: Session = Depends(get_db)):
+    # Obtenemos la instancia de CubeType con el id proporcionado
+    db_cube_type = db.query(CubeType).filter(CubeType.id_cube_type == id).first()
+    # Actualizamos los campos de la instancia de CubeType con los valores proporcionados
+    db_cube_type.cube_type = cube_type.cube_type
+    # Confirmamos la transacción para guardar los cambios en la base de datos
+    db.commit()
+    # Refrescamos la instancia de CubeType para obtener los datos actualizados desde la base de datos
+    db.refresh(db_cube_type)
+    # Devolvemos la instancia de CubeType actualizada
+    return db_cube_type
