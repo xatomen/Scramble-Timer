@@ -165,3 +165,11 @@ def get_cube(id: int, db: Session = Depends(get_db)):
     db_cube = db.query(Cube).filter(Cube.id_cube == id).first()
     # Devolvemos la instancia de Cube
     return db_cube
+
+# Definimos un endpoint GET en la ruta "/cube/"
+@app.get("/cube/")
+def get_cubes(db: Session = Depends(get_db)):
+    # Obtenemos todas las instancias de Cube
+    db_cubes = db.query(Cube).all()
+    # Devolvemos la lista de instancias de Cube
+    return db_cubes
