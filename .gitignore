@@ -2,3 +2,5 @@
 db_data/
 .env
 scramble-timer-db.sql
+.vscode/
+.pytest_cache/
