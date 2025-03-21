@@ -127,3 +127,21 @@ def delete_solve(id: int, db: Session = Depends(get_db)):
     db.commit()
     # Devolvemos la instancia de Solve eliminada
     return db_solve
+
+# Definimos un endpoint PUT en la ruta "/solve/{id}"
+@app.put("/solve/{id}")
+def put_solve(id: int, solve: SolveCreate, db: Session = Depends(get_db)):
+    # Obtenemos la instancia de Solve con el id proporcionado
+    db_solve = db.query(Solve).filter(Solve.id_solve == id).first()
+    # Actualizamos los campos de la instancia de Solve con los valores proporcionados
+    db_solve.date = solve.date
+    db_solve.time = solve.time
+    db_solve.scramble = solve.scramble
+    db_solve.fk_cube = solve.fk_cube
+    db_solve.fk_solve_type = solve.fk_solve_type
+    # Confirmamos la transacción para guardar los cambios en la base de datos
+    db.commit()
+    # Refrescamos la instancia de Solve para obtener los datos actualizados desde la base de datos
+    db.refresh(db_solve)
+    # Devolvemos la instancia de Solve actualizada
+    return
