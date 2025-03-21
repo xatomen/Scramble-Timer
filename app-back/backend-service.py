@@ -355,3 +355,19 @@ def delete_user(id: int, db: Session = Depends(get_db)):
     db.commit()
     # Devolvemos la instancia de User eliminada
     return db_user
+
+# Definimos un endpoint PUT en la ruta "/user/{id}"
+@app.put("/user/{id}")
+def put_user(id: int, user: User, db: Session = Depends(get_db)):
+    # Obtenemos la instancia de User con el id proporcionado
+    db_user = db.query(User).filter(User.id_user == id).first()
+    # Actualizamos los campos de la instancia de User con los valores proporcionados
+    db_user.name = user.name
+    db_user.username = user.username
+    db_user.password = user.password
+    # Confirmamos la transacción para guardar los cambios en la base de datos
+    db.commit()
+    # Refrescamos la instancia de User para obtener los datos actualizados desde la base de datos
+    db.refresh(db_user)
+    # Devolvemos la instancia de User actual
+    return db_user
