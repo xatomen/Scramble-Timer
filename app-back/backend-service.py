@@ -88,7 +88,7 @@ def get_db():
 
 # Definimos un endpoint POST en la ruta "/solve/"
 @app.post("/solve/")
-def create_solve(solve: SolveCreate, db: Session = Depends(get_db)):
+def post_solve(solve: SolveCreate, db: Session = Depends(get_db)):
     # Convertimos el objeto SolveCreate en un diccionario y lo desempaquetamos para crear una instancia de Solve
     db_solve = Solve(**solve.dict())
     # Añadimos la nueva instancia de Solve a la sesión de la base de datos
@@ -100,3 +100,10 @@ def create_solve(solve: SolveCreate, db: Session = Depends(get_db)):
     # Devolvemos la instancia de Solve creada
     return db_solve
 
+# Definimos un endpoint GET en la ruta "/solve/{id}"
+@app.get("/solve/{id}")
+def get_solve(id: int, db: Session = Depends(get_db)):
+    # Obtenemos la instancia de Solve con el id proporcionado
+    db_solve = db.query(Solve).filter(Solve.id_solve == id).first()
+    # Devolvemos la instancia de Solve
+    return db_solve
