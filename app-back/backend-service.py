@@ -383,3 +383,19 @@ def post_session(session: Session, db: Session = Depends(get_db)):
     db.refresh(session)
     # Devolvemos la instancia de Session creada
     return session
+
+# Definimos un endpoint GET en la ruta "/session/{id}"
+@app.get("/session/{id}")
+def get_session(id: int, db: Session = Depends(get_db)):
+    # Obtenemos la instancia de Session con el id proporcionado
+    db_session = db.query(Session).filter(Session.id_session == id).first()
+    # Devolvemos la instancia de Session
+    return db_session
+
+# Definimos un endpoint GET en la ruta "/session/"
+@app.get("/session/")
+def get_sessions(user_id: int, db: Session = Depends(get_db)):
+    # Obtenemos todas las instancias de Session del usuario correspondiente
+    db_sessions = db.query(Session).filter(Session.fk_user == user_id).all()
+    # Devolvemos la lista de instancias de Session
+    return db_sessions
