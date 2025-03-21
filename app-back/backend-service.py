@@ -37,6 +37,7 @@ class Solve(Base):
     scramble = Column(String(100))
     fk_cube = Column(Integer, ForeignKey('cube.id_cube'))
     fk_solve_type = Column(Integer, ForeignKey('solve_type.id_solve_type'))
+    fk_session = Column(Integer, ForeignKey('session.id_session'))
 
 class Session(Base):
     __tablename__ = 'session'
@@ -46,7 +47,6 @@ class Session(Base):
     ao5 = Column(Integer)
     ao12 = Column(Integer)
     qty = Column(Integer)
-    fk_solve = Column(Integer, ForeignKey('solve.id_solve'))
     fk_user = Column(Integer, ForeignKey('user.id_user'))
 
 class User(Base):
@@ -371,3 +371,15 @@ def put_user(id: int, user: User, db: Session = Depends(get_db)):
     db.refresh(db_user)
     # Devolvemos la instancia de User actual
     return db_user
+
+# Definimos un endpoint POST en la ruta "/session/"
+@app.post("/session/")
+def post_session(session: Session, db: Session = Depends(get_db)):
+    # Añadimos la nueva instancia de Session a la sesión de la base de datos
+    db.add(session)
+    # Confirmamos la transacción para guardar los cambios en la base de datos
+    db.commit()
+    # Refrescamos la instancia de Session para obtener los datos actualizados desde la base de datos
+    db.refresh(session)
+    # Devolvemos la instancia de Session creada
+    return session
