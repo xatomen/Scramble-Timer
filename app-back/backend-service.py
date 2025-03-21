@@ -446,3 +446,18 @@ def put_session(id: int, session: Session, db: Session = Depends(get_db)):
     db.refresh(db_session)
     # Devolvemos la instancia de Session actualizada
     return db_session
+
+# Definimos un endpoint POST en la ruta "/session/{id}/solve/"
+@app.post("/session/{id}/solve/")
+def post_session_solve(id: int, solve: SolveCreate, db: Session = Depends(get_db)):
+    # Convertimos el objeto SolveCreate en un diccionario y lo desempaquetamos para crear una instancia de Solve
+    db_solve = Solve(**solve.dict())
+    db_solve.fk_session = id
+    # Añadimos la nueva instancia de Solve a la sesión de la base de datos
+    db.add(db_solve)
+    # Confirmamos la transacción para guardar los cambios en la base de datos
+    db.commit()
+    # Refrescamos la instancia de Solve para obtener los datos actualizados desde la base de datos
+    db.refresh(db_solve)
+    # Devolvemos la instancia de Solve creada
+    return db_solve
