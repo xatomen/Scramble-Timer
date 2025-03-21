@@ -276,3 +276,11 @@ def get_solve_type(id: int, db: Session = Depends(get_db)):
     db_solve_type = db.query(SolveType).filter(SolveType.id_solve_type == id).first()
     # Devolvemos la instancia de SolveType
     return db_solve_type
+
+# Definimos un endpoint GET en la ruta "/solve_type/"
+@app.get("/solve_type/")
+def get_solve_types(db: Session = Depends(get_db)):
+    # Obtenemos todas las instancias de SolveType
+    db_solve_types = db.query(SolveType).all()
+    # Devolvemos la lista de instancias de SolveType
+    return db_solve_types
