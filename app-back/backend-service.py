@@ -185,3 +185,20 @@ def delete_cube(id: int, db: Session = Depends(get_db)):
     db.commit()
     # Devolvemos la instancia de Cube eliminada
     return db_cube
+
+# Definimos un endpoint PUT en la ruta "/cube/{id}"
+@app.put("/cube/{id}")
+def put_cube(id: int, cube: Cube, db: Session = Depends(get_db)):
+    # Obtenemos la instancia de Cube con el id proporcionado
+    db_cube = db.query(Cube).filter(Cube.id_cube == id).first()
+    # Actualizamos los campos de la instancia de Cube con los valores proporcionados
+    db_cube.brand = cube.brand
+    db_cube.model = cube.model
+    db_cube.fk_cube_type = cube.fk_cube_type
+    db_cube.magnetic = cube.magnetic
+    # Confirmamos la transacción para guardar los cambios en la base de datos
+    db.commit()
+    # Refrescamos la instancia de Cube para obtener los datos actualizados desde la base de datos
+    db.refresh(db_cube)
+    # Devolvemos la instancia de Cube actualizada
+    return db_cube
