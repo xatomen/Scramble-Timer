@@ -411,3 +411,38 @@ def delete_session(id: int, db: Session = Depends(get_db)):
     db.commit()
     # Devolvemos la instancia de Session eliminada
     return db_session
+
+# Definimos un endpoint PUT en la ruta "/session/{id}"
+@app.put("/session/{id}")
+def put_session(id: int, session: Session, db: Session = Depends(get_db)):
+    # Obtenemos la instancia de Session con el id proporcionado
+    db_session = db.query(Session).filter(Session.id_session == id).first()
+    
+    # Obtenemos todas las solves de la sesión
+    solves = db.query(Solve).filter(Solve.fk_session == id).all()
+    
+    # Calculamos los tiempos en segundos
+    times = [solve.time.hour * 3600 + solve.time.minute * 60 + solve.time.second + solve.time.microsecond / 1e6 for solve in solves]
+    
+    # Calculamos avg, ao5 y ao12
+    if times:
+        db_session.avg = sum(times) / len(times)
+        db_session.ao5 = sum(sorted(times)[:5]) / 5 if len(times) >= 5 else None
+        db_session.ao12 = sum(sorted(times)[:12]) / 12 if len(times) >= 12 else None
+    else:
+        db_session.avg = None
+        db_session.ao5 = None
+        db_session.ao12 = None
+    
+    # Actualizamos la cantidad de solves
+    db_session.qty = len(solves)
+    
+    # Actualizamos el nombre de la sesión
+    db_session.name = session.name
+    
+    # Confirmamos la transacción para guardar los cambios en la base de datos
+    db.commit()
+    # Refrescamos la instancia de Session para obtener los datos actualizados desde la base de datos
+    db.refresh(db_session)
+    # Devolvemos la instancia de Session actualizada
+    return db_session
