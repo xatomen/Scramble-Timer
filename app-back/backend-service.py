@@ -222,3 +222,11 @@ def get_cube_type(id: int, db: Session = Depends(get_db)):
     db_cube_type = db.query(CubeType).filter(CubeType.id_cube_type == id).first()
     # Devolvemos la instancia de CubeType
     return db_cube_type
+
+# Definimos un endpoint GET en la ruta "/cube_type/"
+@app.get("/cube_type/")
+def get_cube_types(db: Session = Depends(get_db)):
+    # Obtenemos todas las instancias de CubeType
+    db_cube_types = db.query(CubeType).all()
+    # Devolvemos la lista de instancias de CubeType
+    return db_cube_types
