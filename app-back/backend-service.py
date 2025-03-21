@@ -335,3 +335,11 @@ def get_user(id: int, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.id_user == id).first()
     # Devolvemos la instancia de User
     return db_user
+
+# Definimos un endpoint GET en la ruta "/user/"
+@app.get("/user/")
+def get_users(db: Session = Depends(get_db)):
+    # Obtenemos todas las instancias de User
+    db_users = db.query(User).all()
+    # Devolvemos la lista de instancias de User
+    return db_users
