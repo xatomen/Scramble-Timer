@@ -310,3 +310,20 @@ def put_solve_type(id: int, solve_type: SolveType, db: Session = Depends(get_db)
     db.refresh(db_solve_type)
     # Devolvemos la instancia de SolveType actualizada
     return db_solve_type
+
+# Definimos un endpoint POST en la ruta "/user/"
+@app.post("/user/")
+def post_user(user: User, db: Session = Depends(get_db)):
+    # Verificamos si el usuario ya existe por username
+    db_user = db.query(User).filter(User.username == user.username).first()
+    if db_user:
+        return {"error": "Username already registered"}
+    
+    # Añadimos la nueva instancia de User a la sesión de la base de datos
+    db.add(user)
+    # Confirmamos la transacción para guardar los cambios en la base de datos
+    db.commit()
+    # Refrescamos la instancia de User para obtener los datos actualizados desde la base de datos
+    db.refresh(user)
+    # Devolvemos la instancia de User creada
+    return user
