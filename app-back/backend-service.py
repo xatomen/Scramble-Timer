@@ -469,3 +469,15 @@ def get_session_solves(id: int, db: Session = Depends(get_db)):
     db_solves = db.query(Solve).filter(Solve.fk_session == id).all()
     # Devolvemos la lista de instancias de Solve
     return db_solves
+
+# Definimos un endpoint DELETE en la ruta "/session/{id}/solve/{id_solve}"
+@app.delete("/session/{id}/solve/{id_solve}")
+def delete_session_solve(id: int, id_solve: int, db: Session = Depends(get_db)):
+    # Obtenemos la instancia de Solve con el id proporcionado
+    db_solve = db.query(Solve).filter(Solve.id_solve == id_solve).first()
+    # Eliminamos la instancia de Solve de la sesión de la base de datos
+    db.delete(db_solve)
+    # Confirmamos la transacción para guardar los cambios en la base de datos
+    db.commit()
+    # Devolvemos la instancia de Solve eliminada
+    return db_solve
