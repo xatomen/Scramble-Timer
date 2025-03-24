@@ -2,6 +2,7 @@
 
 # Importamos fastapi
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 # Importamos los routers
 from routers import session
@@ -13,6 +14,15 @@ from routers import user
 
 # Inicialización de la aplicación
 app = FastAPI()
+
+# Configuración de CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Cambia "*" por dominios específicos en producción
+    allow_credentials=True,
+    allow_methods=["*"],  # Permitir todos los métodos HTTP
+    allow_headers=["*"],  # Permitir todos los encabezados
+)
 
 app.include_router(session.router)
 app.include_router(solve_type.router)

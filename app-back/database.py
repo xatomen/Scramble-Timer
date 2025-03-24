@@ -3,6 +3,9 @@ from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, DateT
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship, Session
 
+# Importamos la función Depends de FastAPI
+from fastapi import Depends
+
 # Configuración de la base de datos mysql
 from config import user, password, host, port, db_name
 SQLALCHEMY_DATABASE_URL = f"mysql+mysqlconnector://{user}:{password}@{host}:{port}/{db_name}"
@@ -42,11 +45,12 @@ class Session(Base):
     fk_user = Column(Integer, ForeignKey('user.id_user'))
 
 class User(Base):
-    __tablename__ = 'user'
+    __tablename__ = "user"
     id_user = Column(Integer, primary_key=True, index=True)
-    name = Column(Integer)
-    username = Column(Integer)
-    password = Column(Integer)
+    name = Column(String, nullable=False)
+    username = Column(String, unique=True, nullable=False)
+    password = Column(String, nullable=False)
+    email = Column(String, unique=True, nullable=False)
 
 class CubeType(Base):
     __tablename__ = 'cube_type'
