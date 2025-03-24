@@ -72,10 +72,10 @@ export const Navbar = () => {
         </NavbarItem>
         {/* Botón para iniciar sesión */}
         <NavbarItem>
-          <Button color="primary" size="lg">
+          {/* <Button color="primary" size="lg"> */}
             {/* Iniciar sesión */}
             <Sign />
-          </Button>
+          {/* </Button> */}
         </NavbarItem>
       </NavbarContent>
 
