@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Input, Checkbox, Link, Form } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import {
@@ -11,6 +11,13 @@ import {
   useDisclosure,
 } from "@heroui/modal";
 import { Divider } from "@heroui/divider";
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownSection,
+  DropdownItem,
+} from "@heroui/dropdown";
 
 export default function Sign() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -31,6 +38,38 @@ export default function Sign() {
     username: "",
     password: "",
   });
+
+  // Estado para almacenar el nombre del usuario que inició sesión
+  const [loggedInUser, setLoggedInUser] = useState<string | null>(null);
+
+  // Verificar si hay un token al cargar la aplicación
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      // Opcional: Decodificar el token para obtener información del usuario
+      // Aquí asumimos que el servidor tiene un endpoint para validar el token
+      fetch("http://localhost:8000/validate-token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to validate token");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setLoggedInUser(data.name); // Restaurar el nombre del usuario
+        })
+        .catch((error) => {
+          console.error("Error validating token:", error);
+          localStorage.removeItem("authToken"); // Eliminar token inválido
+        });
+    }
+  }, []);
 
   // Manejar cambios en los campos de "Sign Up"
   const handleSignUpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,7 +123,6 @@ export default function Sign() {
     e.preventDefault();
 
     try {
-      // Formatear los datos como application/x-www-form-urlencoded
       const body = new URLSearchParams({
         username: logInData.username,
         password: logInData.password,
@@ -95,7 +133,7 @@ export default function Sign() {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: body.toString(), // Convertir a string
+        body: body.toString(),
       });
 
       if (!response.ok) {
@@ -104,11 +142,24 @@ export default function Sign() {
 
       const data = await response.json();
       console.log("Login successful:", data);
-      alert("Login successful!");
+
+      // Guardar el token en localStorage
+      localStorage.setItem("authToken", data.token);
+
+      // Guardar el nombre del usuario en el estado
+      setLoggedInUser(data.name);
+
+      alert(`Welcome, ${data.name}!`);
     } catch (error) {
       console.error("Error during login:", error);
       alert("Login failed. Please check your credentials and try again.");
     }
+  };
+
+  const handleLogOut = () => {
+    localStorage.removeItem("authToken");
+    setLoggedInUser(null);
+    alert("You have been logged out.");
   };
 
   const toggleVisibility = () => setIsVisible(!isVisible);
@@ -116,7 +167,30 @@ export default function Sign() {
 
   return (
     <>
-      <Button onPress={onOpen}>Sign Up</Button>
+      {/* Mostrar el nombre del usuario o el botón "Sign Up" */}
+      {loggedInUser ? (
+        <Dropdown>
+          <DropdownTrigger>
+            <Button color="primary">{loggedInUser}</Button>
+          </DropdownTrigger>
+          <DropdownMenu>
+            <DropdownSection>
+              <DropdownItem key="profile">Profile</DropdownItem>
+              <DropdownItem key="settings">Settings</DropdownItem>
+              <DropdownItem
+                key="logout"
+                className="text-danger"
+                color="danger"
+                onClick={handleLogOut}
+              >
+                Log Out
+              </DropdownItem>
+            </DropdownSection>
+          </DropdownMenu>
+        </Dropdown>
+      ) : (
+        <Button onPress={onOpen}>Sign Up</Button>
+      )}
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="2xl" backdrop="blur">
         <ModalContent>
           <ModalHeader>Sign Up & Log In</ModalHeader>
