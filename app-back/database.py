@@ -45,12 +45,12 @@ class Session(Base):
     fk_user = Column(Integer, ForeignKey('user.id_user'))
 
 class User(Base):
-    __tablename__ = "users"
+    __tablename__ = "user"
     id_user = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     username = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
-    email = Column(String, unique=True, nullable=True)
+    email = Column(String, unique=True, nullable=False)
 
 class CubeType(Base):
     __tablename__ = 'cube_type'

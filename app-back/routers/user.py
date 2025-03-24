@@ -62,16 +62,21 @@ class UserBase(BaseModel):
     username: str
     password: str
     email: str
-
+    
 # Enpoint POST para crear un nuevo usuario
 @router.post("/user/", tags=["User"])
 def post_user(user: UserBase, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.username == user.username).first()
     if db_user:
-        return {"error": "Username already registered"}
+        raise HTTPException(status_code=400, detail="Username already registered")
     # Hashear la contraseña antes de guardarla
     hashed_password = hash_password(user.password)
-    db_user = User(name=user.name, username=user.username, password=hashed_password)
+    db_user = User(
+        name=user.name,
+        username=user.username,
+        password=hashed_password,
+        email=user.email,  # Asegurarse de guardar el email
+    )
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
