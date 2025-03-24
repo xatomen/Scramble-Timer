@@ -136,7 +136,8 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     access_token = create_access_token(data={"sub": db_user.username})
     return {"access_token": access_token, "token_type": "bearer"}
 
+# Ver como usar esto en un endpoint
 # Ejemplo de ruta protegida
-@router.get("/protected-route", tags=["Auth"])
-def protected_route(current_user: User = Depends(get_current_user)):
-    return {"message": f"Hello, {current_user.username}!"}
+# @router.get("/protected-route", tags=["Auth"])
+# def protected_route(current_user: User = Depends(get_current_user)):
+#     return {"message": f"Hello, {current_user.username}!"}
