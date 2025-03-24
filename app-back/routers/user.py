@@ -134,7 +134,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
         raise HTTPException(status_code=400, detail="Invalid username or password")
     # Crear un token de acceso
     access_token = create_access_token(data={"sub": db_user.username})
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {"access_token": access_token, "token_type": "bearer", "username": db_user.username, "name": db_user.name}
 
 # Ver como usar esto en un endpoint
 # Ejemplo de ruta protegida
